@@ -12,18 +12,20 @@ def load_signal(file):
     ecg = data[:, 8]
     return time, ecg
 
-def time_to_freq(time, ecg):
+def time_to_freq(ecg):
     n = len(ecg)
-    bins = np.arange(1, n // 2)
+    spectrum = np.fft.fft(ecg)
+    bins = np.arange(1, n // 2 + 1)
     freqs = bins * FS / n
-    return freqs, 20 * np.log10(np.abs(np.fft.fft(ecg)[bins]) / n)
+    amp = 2 * np.abs(spectrum[bins]) / n
+    return freqs, 20 * np.log10(amp)
 
 def plot(time, ecg, freqs, db):
     fig, (time_ax, spec_ax) = plt.subplots(2, 1, figsize=(6.3, 4))
 
     time_ax.plot(time, ecg, linewidth=0.5)
     time_ax.set_xlabel("Time (s)")
-    time_ax.set_ylabel("Amplitude")
+    time_ax.set_ylabel("Amplitude (V)")
     time_ax.set_xlim(0, time[-1])
     time_ax.grid(alpha=0.3)
 
@@ -36,6 +38,6 @@ def plot(time, ecg, freqs, db):
 
 if __name__ == "__main__":
     time, ecg = load_signal(WILLIAM_ECG)
-    freqs, db = time_to_freq(time, ecg)
+    freqs, db = time_to_freq(ecg)
     plot(time, ecg, freqs, db)
     plt.show()
