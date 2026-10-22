@@ -23,9 +23,9 @@ def time_to_freq(ecg):
     bins = np.arange(1, n // 2 + 1)
     freqs = bins * FS / n
     amp = 2 * np.abs(spectrum[bins]) / n
-    return freqs, amp
+    return freqs, 20 * np.log10(amp)
 
-def plot(time, ecg, freqs, amp, filename):
+def plot(time, ecg, freqs, db, filename):
     fig, (time_ax, spec_ax) = plt.subplots(2, 1, figsize=(6.3, 4))
 
     time_ax.plot(time, (ecg - ecg.mean()) * 1000, linewidth=0.5)
@@ -34,9 +34,9 @@ def plot(time, ecg, freqs, amp, filename):
     time_ax.set_xlim(0, time[-1])
     time_ax.grid(alpha=0.3)
 
-    spec_ax.plot(freqs, amp * 1000, linewidth=0.5)
+    spec_ax.plot(freqs, db, linewidth=0.5)
     spec_ax.set_xlabel("Frequency (Hz)")
-    spec_ax.set_ylabel("Amplitude (mV)")
+    spec_ax.set_ylabel("Amplitude (dBV)")
     spec_ax.set_xlim(0, FS / 2)
     spec_ax.grid(alpha=0.3)
 
@@ -63,7 +63,7 @@ def save_svg(fig, filename):
 
 if __name__ == "__main__":
     time, ecg = load_signal(WILLIAM_ECG)
-    freqs, amp = time_to_freq(ecg)
-    plot(time, ecg, freqs, amp, "full_ecg")
+    freqs, db = time_to_freq(ecg)
+    plot(time, ecg, freqs, db, "full_ecg")
     plot_zoom(time, ecg, "zoomed_ecg")
     plt.show()
