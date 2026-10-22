@@ -21,6 +21,15 @@
 - 95 – 105 Hz => 100 Hz harmonic (plus the 150 Hz alias)
 
 ## 2. Coefficient Design Function
+Number of co-efficients (taps) is based on the smallest band to remove.
+
+Smallest band is 0.5Hz, therefore if M is the no. of co-efficients
+
+M = Fs / 0.5Hz = 250Hz / 0.5Hz = 500
+
+The filter will delay the sample by (M-1) / 2, so let **M = 501**
+
+We can add a hamming window too to smooth the edges from the filtering.
 
 ## 3. Realtime FIR Class
 
