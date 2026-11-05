@@ -20,9 +20,11 @@ def design(fs, bands):
     H = np.ones(M)                    
     
     for low, high in bands:
-        k_low, k_high = round(low * M / fs), round(high * M / fs)
-        H[k_low:k_high + 1] = 0
-        H[M - k_high:M - k_low + 1] = 0
+        k_low, k_high = int(round(low * M / fs)), int(round(high * M / fs))
+        for k in range(k_low, k_high + 1):
+            H[k] = 0
+            if k > 0:
+                H[M - k] = 0
         
     h = np.real(np.fft.ifft(H))
     h = np.roll(h, M // 2)
