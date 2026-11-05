@@ -3,7 +3,7 @@ import numpy as np
 class FIRfilter: 
     def __init__(self, _coefficients): 
         self.coefficients = np.array(_coefficients)
-        self.N = len(self.coefficients)
+        self.N = len(_coefficients)
         self.buffer = np.zeros(self.N)
         self.index = 0
         
@@ -15,8 +15,11 @@ class FIRfilter:
     def doFilter(self,v):
         """Realtime ECG filtering"""
         self.buffer[self.index] = v
-        
+
+        # Array of indices showing order of most recently accessed sample
         indices = (self.index - np.arange(self.N)) % self.N
+
+        # Apply reordering to match co-effs with sample, dot to multiply then sum
         filtered_value = np.dot(self.coefficients, self.buffer[indices])
         
         self.index = (self.index + 1) % self.N
