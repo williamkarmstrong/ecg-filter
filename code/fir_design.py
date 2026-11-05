@@ -20,7 +20,7 @@ def design(fs, bands):
     H = np.ones(M)                    
     
     for low, high in bands:
-        k_low, k_high = int(round(low * M / fs)), int(round(high * M / fs))
+        k_low, k_high = int(low * M / fs), int(high * M / fs)
         for k in range(k_low, k_high + 1):
             H[k] = 0
             if k > 0:
