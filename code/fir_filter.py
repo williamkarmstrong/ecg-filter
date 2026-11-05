@@ -6,6 +6,11 @@ class FIRfilter:
         self.N = len(self.coefficients)
         self.buffer = np.zeros(self.N)
         self.index = 0
+        
+        #LMS filter parameters
+        self.w = np.zeros(self.N)
+        self.lms_buffer = np.zeros(self.N)
+        self.lms_index = 0
 
     def doFilter(self,v):
         """Realtime ECG filtering"""
@@ -19,4 +24,15 @@ class FIRfilter:
 
     def doFilterAdaptive(self, signal, noise, learningRate):
         """Adaptive LMS filter rather than bandstop filters"""
-        return
+        
+        self.lms_buffer[self.lms_index] = noise
+        indices = (self.lms_index - np.arange(self.N)) % self.N
+        xvector = self.lms_buffer[indices]
+        
+        y = np.dot(self.w, xvector)
+        e = signal - y
+        self.w += 2 *learningRate * e * xvector
+        
+        self.lms_index = (self.lms_index + 1) % self.N  
+        
+        return e

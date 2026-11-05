@@ -1,8 +1,6 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from fir_design import design, BANDS
-from fir_filter import FIRfilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLOTS = os.path.join(ROOT, "plots")
@@ -68,16 +66,5 @@ if __name__ == "__main__":
     freqs, db = time_to_freq(ecg)
     plot(time, ecg, freqs, db, "full_ecg")
     plot_zoom(time, ecg, "zoomed_ecg")
-    
-    coeffs = design(FS, BANDS)
-    fir_filter = FIRfilter(coeffs)
-    
-    filtered_ecg = np.zeros_like(ecg)
-    for i in range(len(ecg)):
-        filtered_ecg[i] = fir_filter.doFilter(ecg[i])
-    
-    freqs_filtered, db_filtered = time_to_freq(filtered_ecg)
-    plot(time, filtered_ecg, freqs_filtered, db_filtered, "filtered_ecg")
-    plot_zoom(time, filtered_ecg, "zoomed_filtered_ecg")
     
     plt.show()

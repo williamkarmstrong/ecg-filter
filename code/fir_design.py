@@ -32,4 +32,5 @@ def design(fs, bands):
     return h * np.hamming(M)
 
 if __name__ == "__main__":
-    pass
+    coefficients = design(250, BANDS)
+    print("FIR Coefficients:", coefficients)
