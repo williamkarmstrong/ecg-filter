@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLOTS = os.path.join(ROOT, "plots")
 WILLIAM_ECG = os.path.join(ROOT, "ecg", "william_ecg_1.tsv")
+SHREYAS_ECG = os.path.join(ROOT, "ecg", "shreyas_ecg_1.tsv")
 
 SAVE = True
 
