@@ -1,10 +1,6 @@
 import numpy as np
-
-BANDS = [
-    (0, 0.5),
-    (45, 55),
-    (95, 105)
-]
+import matplotlib.pyplot as plt
+from ecg_plot import save_svg, FS, BANDS
 
 def design(fs, bands):
     """
@@ -32,5 +28,21 @@ def design(fs, bands):
     return h * np.hamming(M)
 
 if __name__ == "__main__":
-    coefficients = design(250, BANDS)
-    print("FIR Coefficients:", coefficients)
+    h = design(FS, BANDS)
+    print("Number of taps:", len(h))
+
+    # Zero-pad the FFT so the response between the M design bins is visible
+    n_fft = 8192
+    H = np.abs(np.fft.fft(h, n_fft)[:n_fft // 2])
+    f = np.arange(n_fft // 2) * FS / n_fft
+
+    fig, ax = plt.subplots(figsize=(6.3, 2.5))
+    ax.plot(f, 20 * np.log10(H + 1e-12), linewidth=0.8)
+    ax.set_xlabel("Frequency (Hz)")
+    ax.set_ylabel("Gain (dB)")
+    ax.set_xlim(0, FS / 2)
+    ax.set_ylim(-80, 5)
+    ax.grid(alpha=0.3)
+    fig.tight_layout()
+    save_svg(fig, "fir_frequency_response")
+    plt.show()
